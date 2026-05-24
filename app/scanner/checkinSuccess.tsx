@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+const API_BASE = "https://maptiva-backend.onrender.com";
 
 export default function CheckInSuccess() {
   const router = useRouter();
