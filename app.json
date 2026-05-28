@@ -7,7 +7,7 @@
     "icon": "./assets/images/icon.png",
     "scheme": "maptiva",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": false,
+    "newArchEnabled": true,
     "ios": {
       "supportsTablet": true
     },
@@ -45,7 +45,8 @@
         }
       ],
       "expo-camera",
-      "expo-web-browser"
+      "expo-web-browser",
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
