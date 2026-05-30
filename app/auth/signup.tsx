@@ -62,7 +62,7 @@ export default function SignupScreen() {
   return (
     <View style={styles.container}>
       <Image
-        source={require(".../assets/images/image.png")}
+        source={require("./assets/images/image.png")}
         style={styles.logo}
         resizeMode="contain"
       />

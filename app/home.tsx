@@ -44,7 +44,7 @@ export default function HomeScreen() {
       // ✅ When admin accepts permission request
       socket.on("pc_unlocked_mobile", (data: any) => {
         router.replace({
-          pathname: ".../scanner/checkinSuccess" as any,
+          pathname: "./scanner/checkinSuccess" as any,
           params: {
             pc_name: data.pc_name || "PC01",
             checked_in_at: data.checked_in_at || ""
