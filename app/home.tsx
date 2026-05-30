@@ -73,7 +73,7 @@ export default function HomeScreen() {
         <Text style={styles.subtitle}>{new Date().toDateString()}</Text>
         <TouchableOpacity
           style={styles.loginButton}
-          onPress={() => router.push(".../scanner/UnifiedScanner")}
+          onPress={() => router.push("../scanner/UnifiedScanner")}
         >
           <Text style={styles.loginText}>Log-In</Text>
         </TouchableOpacity>
@@ -82,19 +82,19 @@ export default function HomeScreen() {
       <View style={styles.bottomNav}>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => router.push(".../tutorial")}
+          onPress={() => router.push("../tutorial")}
         >
           <Ionicons name="help-circle-outline" size={30} color="#00b894" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.qrButton}
-          onPress={() => router.push(".../scanner/UnifiedScanner")}
+          onPress={() => router.push("../scanner/UnifiedScanner")}
         >
           <Ionicons name="qr-code-outline" size={36} color="white" />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.navItem}
-          onPress={() => router.push(".../settings")}
+          onPress={() => router.push("../settings")}
         >
           <MaterialIcons name="menu" size={30} color="#00b894" />
         </TouchableOpacity>
