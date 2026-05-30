@@ -46,7 +46,7 @@ export default function Login() {
 
   return (
     <View style={styles.container}>
-      <Image source={require("../../assets/images/image.png")} style={styles.logo} resizeMode="contain" />
+      <Image source={require(".../assets/images/image.png")} style={styles.logo} resizeMode="contain" />
 
       <View style={styles.tab}>
         <Text style={styles.tabText}>Student</Text>

@@ -26,7 +26,7 @@ export default function CheckInScanner() {
       const result = await res.json();
       if (res.ok && result.success) {
         router.replace({
-          pathname: "./checkinLoading",
+          pathname: "../checkinLoading",
           params: { qrData: data },
         });
       } else {

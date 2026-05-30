@@ -53,9 +53,9 @@ export default function ReportPage() {
         Alert.alert("Success", "Report submitted successfully!");
         setReport("");
         if (checkedIn) {
-          router.push("../homeChecked");
+          router.push(".../homeChecked");
         } else {
-          router.push("../home");
+          router.push(".../home");
         }
       } else {
         Alert.alert("Failed", data.message || "Failed to submit report");
@@ -70,9 +70,9 @@ export default function ReportPage() {
 
   const handleBack = () => {
     if (checkedIn) {
-      router.push("../homeChecked");
+      router.push(".../homeChecked");
     } else {
-      router.push("../home");
+      router.push(".../home");
     }
   };
 

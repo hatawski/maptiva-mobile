@@ -9,7 +9,7 @@ export default function CheckInLoading() {
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      router.replace({ pathname: "./checkinSuccess", params: { qrData } });
+      router.replace({ pathname: "../checkinSuccess", params: { qrData } });
     }, 2000);
     return () => clearTimeout(timer);
   }, []);

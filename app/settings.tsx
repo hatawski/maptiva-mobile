@@ -60,7 +60,7 @@ export default function Settings() {
     console.error("Checkout on signout failed:", err);
   } finally {
     await AsyncStorage.removeItem("user");
-    router.replace("../auth/login");
+    router.replace(".../auth/login");
   }
 };
 

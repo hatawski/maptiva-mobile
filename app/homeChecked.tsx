@@ -91,7 +91,7 @@ export default function HomeChecked() {
         {/* QR Scanner */}
         <TouchableOpacity
           style={styles.qrButton}
-          onPress={() => router.push("../scanner/loginScanner")}
+          onPress={() => router.push(".../scanner/loginScanner")}
         >
           <Ionicons name="qr-code-outline" size={36} color="white" />
         </TouchableOpacity>
@@ -101,7 +101,7 @@ export default function HomeChecked() {
           style={styles.navItem}
           onPress={() =>
             router.push({
-              pathname: "../settings",
+              pathname: ".../settings",
               params: { name, idNumber },
             })
           }
