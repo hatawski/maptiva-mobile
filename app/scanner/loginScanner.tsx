@@ -1,5 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import {View, Text, StyleSheet, TouchableOpacity, Animated, Dimensions,} from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Dimensions,
+  Alert,
+} from "react-native";
 import { CameraView, useCameraPermissions } from "expo-camera";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
@@ -11,10 +19,11 @@ export default function LoginScanner() {
   const router = useRouter();
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
+  const lockRef = useRef(false);
 
   const scanAnim = useRef(new Animated.Value(0)).current;
 
-  // Animation for scan line
+  // Animation
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -32,32 +41,48 @@ export default function LoginScanner() {
     ).start();
   }, []);
 
-  // Camera permission request
+  // Permission
   useEffect(() => {
     if (!permission?.granted) requestPermission();
   }, [permission]);
 
   if (!permission) return <Text>Requesting camera permission...</Text>;
-  if (!permission.granted)
+
+  if (!permission.granted) {
     return (
       <View style={styles.center}>
         <Text>No camera access</Text>
         <TouchableOpacity onPress={requestPermission}>
-          <Text style={{ color: "#4EF0C3", marginTop: 10 }}>Grant Permission</Text>
+          <Text style={{ color: "#4EF0C3", marginTop: 10 }}>
+            Grant Permission
+          </Text>
         </TouchableOpacity>
       </View>
     );
+  }
 
-  const handleQRScan = ({ data }: { data: string }) => {
-    if (scanned) return;
+  // 🔒 SAFE SCANNER
+  const handleQRScan = async ({ data }: { data: string }) => {
+    if (lockRef.current) return;
+
+    lockRef.current = true;
     setScanned(true);
-    // TODO: handle QR data, call backend, navigate
-    alert("Scanned QR: " + data);
+
+    try {
+      Alert.alert("Scanned", data);
+
+      // OPTIONAL: navigate
+      // router.push({ pathname: "/nextPage", params: { data } });
+
+    } catch (err) {
+      console.log(err);
+      lockRef.current = false;
+      setScanned(false);
+    }
   };
 
   return (
     <View style={styles.container}>
-      {/* Camera */}
       <CameraView
         style={StyleSheet.absoluteFillObject}
         barcodeScannerSettings={{ barcodeTypes: ["qr"] }}
@@ -72,7 +97,7 @@ export default function LoginScanner() {
           <Text style={styles.title}>MAPTIVA</Text>
         </View>
 
-        {/* QR Frame */}
+        {/* Frame */}
         <View style={styles.frameContainer}>
           <View style={styles.frame}>
             <Animated.View
@@ -82,10 +107,12 @@ export default function LoginScanner() {
               ]}
             />
           </View>
-          <Text style={styles.frameText}>Align the QR code within the frame</Text>
+          <Text style={styles.frameText}>
+            Align the QR code within the frame
+          </Text>
         </View>
 
-        {/* Bottom navigation */}
+        {/* Bottom bar */}
         <View style={styles.bottomBar}>
           <TouchableOpacity>
             <Ionicons name="help-circle-outline" size={28} color="#fff" />
@@ -95,8 +122,14 @@ export default function LoginScanner() {
             <Ionicons name="qr-code-outline" size={36} color="#fff" />
           </TouchableOpacity>
 
-          <TouchableOpacity>
-            <MaterialIcons name="menu" size={28} color="#fff" />
+          {/* RESET BUTTON (IMPORTANT ADDITION) */}
+          <TouchableOpacity
+            onPress={() => {
+              setScanned(false);
+              lockRef.current = false;
+            }}
+          >
+            <MaterialIcons name="refresh" size={28} color="#fff" />
           </TouchableOpacity>
         </View>
       </View>
