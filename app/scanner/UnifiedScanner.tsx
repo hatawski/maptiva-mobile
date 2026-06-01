@@ -133,7 +133,7 @@ export default function UnifiedScanner() {
     if (res.ok) {
       // ✅ Navigate to success screen with PC info
       router.replace({
-        pathname: "./scanner/checkinSuccess" as any,
+        pathname: "/scanner/checkinSuccess" as any,
         params: {
           pc_name: result.pc_name || pc_name,
           checked_in_at: result.checked_in_at || ""
