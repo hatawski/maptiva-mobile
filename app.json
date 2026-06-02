@@ -24,6 +24,9 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
+      "android": {
+         "usesCleartextTraffic": true
+        },
       "package": "com.maptiva.app"
     },
     "web": {
