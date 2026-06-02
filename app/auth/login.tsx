@@ -8,7 +8,7 @@ export default function Login() {
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
 
-  const API_URL = "https://maptiva-backend.onrender.com";
+  const API_URL = "http://50.0.14.185:5000";
 
   const handleLogin = async () => {
   if (!studentId || !password) {
