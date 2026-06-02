@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const API_BASE = "https://maptiva-backend.onrender.com";
+const API_BASE = "http://50.0.14.185:5000";
 
 export default function HomeScreen() {
   const router = useRouter();

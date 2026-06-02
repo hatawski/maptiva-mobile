@@ -8,7 +8,7 @@ export default function Settings() {
   const router = useRouter();
   const slideAnim = useRef(new Animated.Value(300)).current;
 
-  const API_BASE = "https://maptiva-backend.onrender.com";
+  const API_BASE = "http://50.0.14.185:5000";
 
   const [name, setName] = useState<string>("Loading...");
   const [id, setId] = useState<string>("-");

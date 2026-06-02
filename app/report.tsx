@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "reac
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE = "https://maptiva-backend.onrender.com";
+const API_BASE = "http://50.0.14.185:5000";
 
 export default function ReportPage() {
   const router = useRouter();
