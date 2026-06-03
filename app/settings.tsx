@@ -11,7 +11,7 @@ export default function Settings() {
   const API_BASE = "http://50.0.14.185:5000";
 
   const [name, setName] = useState<string>("Loading...");
-  const [id, setId] = useState<string>("-");
+  const [studentCode, setStudentCode] = useState<string>("-"); // Renamed to accurately reflect institutional identity
 
   const firstLetter =
     typeof name === "string" && name.length > 0 ? name.charAt(0).toUpperCase() : "?";
@@ -23,7 +23,8 @@ export default function Settings() {
           try {
             const user = JSON.parse(data);
             setName(user.name || "No Name");
-            setId(user.id || "-");
+            // ✅ Fix: Target student_id string code instead of raw relational primary key integer id
+            setStudentCode(user.student_id || user.id || "-");
           } catch (e) {
             console.log("Failed to parse user data:", e);
           }
@@ -41,31 +42,31 @@ export default function Settings() {
   const handleAboutUs = () => router.push("/aboutus");
 
   const handleSignOut = async () => {
-  try {
-    // ✅ Auto checkout on mobile sign out
-    const storedUser = await AsyncStorage.getItem("user");
-    const parsed = JSON.parse(storedUser || "{}");
-    
-    if (parsed?.id) {
-      await fetch(`${API_BASE}/checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true"
-        },
-        body: JSON.stringify({ student_id: parsed.id })
-      });
+    try {
+      // ✅ Safe cascade termination loop over local network
+      const storedUser = await AsyncStorage.getItem("user");
+      const parsed = JSON.parse(storedUser || "{}");
+      
+      if (parsed?.id) {
+        await fetch(`${API_BASE}/checkout`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true"
+          },
+          body: JSON.stringify({ student_id: parsed.id })
+        });
+      }
+    } catch (err) {
+      console.error("Checkout on signout failed:", err);
+    } finally {
+      // Clear persistent parameters and shift execution safely
+      await AsyncStorage.removeItem("user");
+      router.replace("/auth/login"); // ✅ Fix: Replaced relative jump with explicit absolute routing
     }
-  } catch (err) {
-    console.error("Checkout on signout failed:", err);
-  } finally {
-    await AsyncStorage.removeItem("user");
-    router.replace("../auth/login");
-  }
-};
+  };
 
   const handleClose = () => {
-    // slide down animation then close
     Animated.timing(slideAnim, {
       toValue: 300,
       duration: 200,
@@ -77,60 +78,70 @@ export default function Settings() {
 
   return (
     <View style={styles.overlay}>
+      {/* Background pressable overlay allows easy dismiss by clicking outside the card */}
+      <TouchableOpacity style={StyleSheet.absoluteFillObject} activeOpacity={1} onPress={handleClose} />
+
       <Animated.View style={[styles.sheet, { transform: [{ translateY: slideAnim }] }]}>
-        {/* Header */}
+        {/* Header Profile Section */}
         <View style={styles.header}>
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={{ flexDirection: "row", alignItems: "center", flex: 1 }}>
             <View style={styles.avatar}>
               <Text style={styles.avatarText}>{firstLetter}</Text>
             </View>
-            <View>
-              <Text style={styles.name}>{name}</Text>
-              <Text style={styles.id}>{id}</Text>
+            <View style={{ flex: 1 }}>
+              <Text style={styles.name} numberOfLines={1} ellipsizeMode="tail">{name}</Text>
+              <Text style={styles.id}>{studentCode}</Text>
             </View>
           </View>
 
-          {/* Hamburger menu on right */}
+          {/* Right Menu Dismiss Toggle */}
           <TouchableOpacity onPress={handleClose} style={styles.menuButton}>
-            <Ionicons name="menu" size={28} color="#00B7A8" />
+            <Ionicons name="close-circle-outline" size={28} color="#00b894" />
           </TouchableOpacity>
         </View>
 
-        {/* Options */}
+        <View style={styles.divider} />
+
+        {/* Menu Actions */}
         <TouchableOpacity style={styles.option} onPress={handleAboutUs}>
-          <Ionicons name="information-circle-outline" size={22} color="#00B7A8" />
+          <Ionicons name="information-circle-outline" size={24} color="#00b894" />
           <Text style={styles.optionText}>About Us</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.option} onPress={handleSignOut}>
-          <Ionicons name="log-out-outline" size={22} color="#ff3b30" />
-          <Text style={[styles.optionText, { color: "#ff3b30" }]}>Sign Out</Text>
+          <Ionicons name="log-out-outline" size={24} color="#ff3b30" />
+          <Text style={[styles.optionText, { color: "#ff3b30" }]}>Sign Out Account</Text>
         </TouchableOpacity>
       </Animated.View>
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundColor: "rgba(4, 28, 50, 0.7)", // Blends beautifully with your background palette
   },
   sheet: {
     backgroundColor: "#062743",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,
     padding: 25,
-    paddingBottom: 40,
+    paddingBottom: 45,
+    shadowColor: "#000",
+    shadowOpacity: 0.4,
+    shadowRadius: 15,
+    elevation: 10,
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 25,
+    justifyContent: "space-between",
   },
   avatar: {
-    backgroundColor: "#00B7A8",
-    borderRadius: 40,
+    backgroundColor: "#00b894", // Synchronized color palette
+    borderRadius: 30,
     width: 60,
     height: 60,
     justifyContent: "center",
@@ -138,19 +149,28 @@ const styles = StyleSheet.create({
     marginRight: 15,
   },
   avatarText: {
-    color: "white",
-    fontSize: 28,
+    color: "#041C32",
+    fontSize: 24,
     fontWeight: "bold",
   },
   name: {
     color: "white",
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: "bold",
+    letterSpacing: 0.3,
   },
   id: {
-    color: "#9acccd",
+    color: "#b2bec3",
     fontSize: 14,
     marginTop: 3,
+  },
+  menuButton: { 
+    padding: 5 
+  },
+  divider: {
+    height: 1,
+    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    marginVertical: 20,
   },
   option: {
     flexDirection: "row",
@@ -160,9 +180,7 @@ const styles = StyleSheet.create({
   optionText: {
     color: "white",
     fontSize: 16,
-    marginLeft: 12,
-  },
-   menuButton: { 
-    padding: 5 
+    fontWeight: "500",
+    marginLeft: 14,
   },
 });

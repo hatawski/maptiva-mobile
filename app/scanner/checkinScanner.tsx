@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { CameraView, useCameraPermissions } from "expo-camera";
-import { useRouter, useLocalSearchParams } from "expo-router";
-import { Alert, View } from "react-native";
+import { useRouter } from "expo-router";
+import { Alert, View, StyleSheet } from "react-native";
 
 export default function CheckInScanner() {
   const router = useRouter();
-  const { studentId } = useLocalSearchParams();
-
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const lockRef = useRef(false);
@@ -18,48 +16,41 @@ export default function CheckInScanner() {
   }, [permission]);
 
   if (!permission?.granted) {
-    return <View />;
+    return <View style={styles.fallback} />;
   }
 
-  const handleBarcodeScanned = async ({ data }: { data: string }) => {
-    // 🔒 Prevent multiple triggers
+  const handleBarcodeScanned = ({ data }: { data: string }) => {
+    // 🔒 Prevent multiple rapid frames from triggering simultaneously
     if (lockRef.current) return;
     lockRef.current = true;
     setScanned(true);
 
-    try {
-      const res = await fetch("https://<YOUR_NGROK_URL>/reserve", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          qrData: data,
-          studentId,
-        }),
-      });
+    // Expected format from scanned sticker/screen: e.g., "PC01" or "PC15"
+    const scannedValue = data.trim();
 
-      const result = await res.json();
-
-      if (res.ok && result.success) {
-        router.replace({
-          pathname: "../checkinLoading",
-          params: { qrData: data },
-        });
-      } else {
-        Alert.alert("Error", result.message || "Reservation failed");
-        lockRef.current = false;
-        setScanned(false);
-      }
-    } catch (err) {
-      console.error(err);
-      Alert.alert("Error", "Failed to reserve PC");
-      lockRef.current = false;
-      setScanned(false);
+    if (!scannedValue.startsWith("PC")) {
+      Alert.alert("Invalid QR", "This QR code is not a valid MAPTIVA Workstation identifier.", [
+        {
+          text: "Try Again",
+          onPress: () => {
+            lockRef.current = false;
+            setScanned(false);
+          }
+        }
+      ]);
+      return;
     }
+
+    // ✅ Hand over the scanned PC name to the transactional loading gateway
+    router.replace({
+      pathname: "/scanner/checkinLoading",
+      params: { pc_name: scannedValue },
+    });
   };
 
   return (
     <CameraView
-      style={{ flex: 1 }}
+      style={StyleSheet.absoluteFillObject}
       barcodeScannerSettings={{
         barcodeTypes: ["qr"],
       }}
@@ -67,3 +58,7 @@ export default function CheckInScanner() {
     />
   );
 }
+
+const styles = StyleSheet.create({
+  fallback: { flex: 1, backgroundColor: "#041C32" }
+});

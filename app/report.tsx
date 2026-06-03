@@ -23,18 +23,16 @@ export default function ReportPage() {
     try {
       setLoading(true);
 
-      // ✅ Get logged in user
+      // ✅ Securely load persistent student metadata
       const storedUser = await AsyncStorage.getItem("user");
-      console.log("stored user:", storedUser); // check what's stored
       const parsed = JSON.parse(storedUser || "{}");
 
       if (!parsed?.id) {
-        Alert.alert("Error", "You must be logged in to submit a report.");
+        Alert.alert("Authentication Error", "You must be logged in to submit a report.");
         setLoading(false);
         return;
       }
 
-      // ✅ Single fetch call only
       const res = await fetch(`${API_BASE}/report`, {
         method: "POST",
         headers: {
@@ -43,7 +41,7 @@ export default function ReportPage() {
         },
         body: JSON.stringify({
           student_id: parsed.id,
-          message: report,
+          message: report.trim(),
         }),
       });
 
@@ -52,17 +50,19 @@ export default function ReportPage() {
       if (res.ok) {
         Alert.alert("Success", "Report submitted successfully!");
         setReport("");
+        
+        // ✅ Absolute path replacements to isolate state histories
         if (checkedIn) {
-          router.push("../homeChecked");
+          router.replace("/homeChecked");
         } else {
-          router.push("../home");
+          router.replace("/home");
         }
       } else {
-        Alert.alert("Failed", data.message || "Failed to submit report");
+        Alert.alert("Submission Failed", data.message || "Failed to submit report");
       }
     } catch (err) {
       console.error(err);
-      Alert.alert("Error", "Cannot connect to server");
+      Alert.alert("Network Error", "Cannot connect to server");
     } finally {
       setLoading(false);
     }
@@ -70,39 +70,41 @@ export default function ReportPage() {
 
   const handleBack = () => {
     if (checkedIn) {
-      router.push("../homeChecked");
+      router.replace("/homeChecked");
     } else {
-      router.push("../home");
+      router.replace("/home");
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Absolute Back Escape Navigation Row */}
       <TouchableOpacity style={styles.backButton} onPress={handleBack}>
-        <Ionicons name="arrow-back-outline" size={28} color="#00ADEF" />
+        <Ionicons name="arrow-back-outline" size={28} color="#00b894" />
       </TouchableOpacity>
 
       <View style={styles.card}>
-        <Text style={styles.icon}>⚠️</Text>
-        <Text style={styles.title}>Report</Text>
-        <Text style={styles.subtitle}>What went wrong?</Text>
+        <Ionicons name="warning-outline" size={40} color="#e74c3c" style={{ marginBottom: 8 }} />
+        <Text style={styles.title}>Report an Issue</Text>
+        <Text style={styles.subtitle}>What went wrong with the workstation?</Text>
 
         <TextInput
           style={styles.input}
-          placeholder="In your own words, help us understand what went wrong."
-          placeholderTextColor="#777"
+          placeholder="In your own words, help us understand what went wrong (hardware defect, locked screen, power issue)..."
+          placeholderTextColor="#758283"
           multiline
+          numberOfLines={4}
           value={report}
           onChangeText={setReport}
         />
 
         <TouchableOpacity
-          style={[styles.button, loading && { opacity: 0.6 }]}
+          style={[styles.button, (loading || !report.trim()) && styles.disabledButton]}
           onPress={handleSubmit}
-          disabled={loading}
+          disabled={loading || !report.trim()}
         >
           <Text style={styles.buttonText}>
-            {loading ? "Submitting..." : "Submit"}
+            {loading ? "Submitting..." : "Submit Report"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -113,19 +115,19 @@ export default function ReportPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#00131A",
+    backgroundColor: "#041C32", // Syncs seamlessly with global theme canvas
     alignItems: "center",
     justifyContent: "center",
   },
   backButton: {
     position: "absolute",
     top: 50,
-    right: 20,
+    left: 20, // Shifted to left position matching standard UX designs
     zIndex: 10,
     padding: 5,
   },
   card: {
-    backgroundColor: "#0D1C22",
+    backgroundColor: "#062743",
     width: "85%",
     borderRadius: 16,
     padding: 24,
@@ -133,12 +135,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 8,
     alignItems: "center",
-  },
-  icon: {
-    fontSize: 28,
-    color: "#00ADEF",
-    alignSelf: "center",
-    marginBottom: 8,
+    elevation: 6
   },
   title: {
     fontSize: 22,
@@ -147,31 +144,37 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   subtitle: {
-    color: "#bbb",
-    marginTop: 8,
-    marginBottom: 12,
+    color: "#b2bec3",
+    fontSize: 14,
+    marginTop: 6,
+    marginBottom: 16,
     textAlign: "center",
   },
   input: {
-    backgroundColor: "#0F2C35",
+    backgroundColor: "#132C47",
     borderRadius: 12,
     color: "#fff",
-    padding: 12,
-    minHeight: 90,
+    padding: 14,
+    minHeight: 120,
     textAlignVertical: "top",
     width: "100%",
+    fontSize: 14,
   },
   button: {
-    backgroundColor: "#00B7A8",
-    borderRadius: 10,
+    backgroundColor: "#00b894",
+    borderRadius: 25,
     marginTop: 20,
-    paddingVertical: 10,
+    paddingVertical: 12,
     alignItems: "center",
     width: "100%",
   },
+  disabledButton: {
+    opacity: 0.4,
+    backgroundColor: "#758283"
+  },
   buttonText: {
-    color: "#fff",
+    color: "#041C32",
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: "bold",
   },
 });

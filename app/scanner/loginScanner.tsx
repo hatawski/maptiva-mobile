@@ -23,7 +23,7 @@ export default function LoginScanner() {
 
   const scanAnim = useRef(new Animated.Value(0)).current;
 
-  // Animation
+  // Animation Loop
   useEffect(() => {
     Animated.loop(
       Animated.sequence([
@@ -41,19 +41,19 @@ export default function LoginScanner() {
     ).start();
   }, []);
 
-  // Permission
+  // Permission Request
   useEffect(() => {
     if (!permission?.granted) requestPermission();
   }, [permission]);
 
-  if (!permission) return <Text>Requesting camera permission...</Text>;
+  if (!permission) return <Text style={styles.centerText}>Requesting camera permission...</Text>;
 
   if (!permission.granted) {
     return (
       <View style={styles.center}>
-        <Text>No camera access</Text>
+        <Text style={{ color: "#fff" }}>No camera access</Text>
         <TouchableOpacity onPress={requestPermission}>
-          <Text style={{ color: "#4EF0C3", marginTop: 10 }}>
+          <Text style={{ color: "#4EF0C3", marginTop: 10, fontWeight: "bold" }}>
             Grant Permission
           </Text>
         </TouchableOpacity>
@@ -61,7 +61,7 @@ export default function LoginScanner() {
     );
   }
 
-  // 🔒 SAFE SCANNER
+  // 🔒 SECURE AUTOMATED ROUTING GATEWAY
   const handleQRScan = async ({ data }: { data: string }) => {
     if (lockRef.current) return;
 
@@ -69,13 +69,24 @@ export default function LoginScanner() {
     setScanned(true);
 
     try {
-      Alert.alert("Scanned", data);
+      const scannedToken = data.trim();
 
-      // OPTIONAL: navigate
-      // router.push({ pathname: "/nextPage", params: { data } });
+      // Basic validation: ensure it's a valid data string before hitting the network
+      if (!scannedToken) {
+        Alert.alert("Invalid Code", "Scanned QR data is empty.", [
+          { text: "Try Again", onPress: () => { lockRef.current = false; setScanned(false); } }
+        ]);
+        return;
+      }
+
+      // ✅ Route token forward to a loading screen to process the handshake
+      router.replace({
+        pathname: "/scanner/checkinLoading",
+        params: { pc_name: scannedToken },
+      });
 
     } catch (err) {
-      console.log(err);
+      console.log("Scanner routing error:", err);
       lockRef.current = false;
       setScanned(false);
     }
@@ -89,7 +100,7 @@ export default function LoginScanner() {
         onBarcodeScanned={scanned ? undefined : handleQRScan}
       />
 
-      {/* Overlay */}
+      {/* Overlay Frame HUD */}
       <View style={styles.overlay}>
         {/* Header */}
         <View style={styles.header}>
@@ -97,7 +108,7 @@ export default function LoginScanner() {
           <Text style={styles.title}>MAPTIVA</Text>
         </View>
 
-        {/* Frame */}
+        {/* Frame Target Box */}
         <View style={styles.frameContainer}>
           <View style={styles.frame}>
             <Animated.View
@@ -108,21 +119,21 @@ export default function LoginScanner() {
             />
           </View>
           <Text style={styles.frameText}>
-            Align the QR code within the frame
+            Align the computer's QR code within the frame
           </Text>
         </View>
 
-        {/* Bottom bar */}
+        {/* Bottom Menu Panel */}
         <View style={styles.bottomBar}>
-          <TouchableOpacity>
-            <Ionicons name="help-circle-outline" size={28} color="#fff" />
+          <TouchableOpacity onPress={() => router.push("/home")}>
+            <Ionicons name="home-outline" size={28} color="#fff" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.qrButton}>
+          <View style={styles.qrButton}>
             <Ionicons name="qr-code-outline" size={36} color="#fff" />
-          </TouchableOpacity>
+          </View>
 
-          {/* RESET BUTTON (IMPORTANT ADDITION) */}
+          {/* RESET BUTTON */}
           <TouchableOpacity
             onPress={() => {
               setScanned(false);
@@ -139,21 +150,18 @@ export default function LoginScanner() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: "#000" },
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-
+  center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#041C32" },
+  centerText: { textAlign: "center", marginTop: 50, color: "#fff" },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: "space-between",
     paddingVertical: 40,
   },
-
   header: {
     alignItems: "center",
     marginTop: 20,
   },
   title: { color: "#4EF0C3", fontSize: 28, fontWeight: "bold", marginTop: 10 },
-  subtitle: { color: "#fff", fontSize: 16 },
-
   frameContainer: {
     alignItems: "center",
   },
@@ -171,24 +179,24 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#4EF0C3",
   },
-  frameText: { color: "#A3B3C3", marginTop: 10 },
-
+  frameText: { color: "#A3B3C3", marginTop: 10, fontSize: 14, fontWeight: "500" },
   bottomBar: {
     flexDirection: "row",
     justifyContent: "space-around",
     alignItems: "center",
-    backgroundColor: "#1bc99b",
+    backgroundColor: "#062743", // Changed from raw green to match your dark dashboard theme
     paddingVertical: 15,
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
   },
   qrButton: {
-    backgroundColor: "#007AFF",
+    backgroundColor: "#00b894", // Changed to match your mint/cyan system profile
     padding: 16,
     borderRadius: 40,
     marginTop: -20,
     shadowColor: "#000",
     shadowOpacity: 0.3,
     shadowRadius: 5,
+    elevation: 5,
   },
 });

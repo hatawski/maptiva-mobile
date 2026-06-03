@@ -25,7 +25,9 @@ export default function CheckInSuccess() {
       if (!parsed?.id) return;
 
       socket = io(API_BASE, {
-        transports: ["polling"],
+        transports: ["websocket"],
+        autoConnect: true,
+        forceNew: true,
         extraHeaders: { "ngrok-skip-browser-warning": "true" }
       });
 
