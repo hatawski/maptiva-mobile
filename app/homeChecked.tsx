@@ -53,8 +53,7 @@ export default function HomeChecked() {
               const res = await fetch(`${API_BASE}/checkout`, {
                 method: "POST",
                 headers: { 
-                  "Content-Type": "application/json",
-                  "ngrok-skip-browser-warning": "true"
+                  "Content-Type": "application/json"
                 },
                 body: JSON.stringify({ student_id: identificationPayload }),
               });

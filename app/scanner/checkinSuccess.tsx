@@ -27,8 +27,7 @@ export default function CheckInSuccess() {
       socket = io(API_BASE, {
         transports: ["websocket"],
         autoConnect: true,
-        forceNew: true,
-        extraHeaders: { "ngrok-skip-browser-warning": "true" }
+        forceNew: true
       });
 
       socket.on("connect", () => {
@@ -58,8 +57,7 @@ export default function CheckInSuccess() {
       const res = await fetch(`${API_BASE}/checkout`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true"
+          "Content-Type": "application/json"
         },
         body: JSON.stringify({ student_id: parsed.id }),
       });

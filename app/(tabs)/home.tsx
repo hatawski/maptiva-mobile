@@ -33,8 +33,7 @@ export default function HomeScreen() {
       socket = io(API_BASE, {
         transports: ["websocket"],
         autoConnect: true,
-        forceNew: true,
-        extraHeaders: { "ngrok-skip-browser-warning": "true" }
+        forceNew: true
       });
 
       socket.on("connect", () => {
