@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -24,9 +25,6 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO"
       ],
-      "android": {
-         "usesCleartextTraffic": true
-        },
       "package": "com.maptiva.app"
     },
     "web": {
