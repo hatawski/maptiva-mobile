@@ -45,10 +45,12 @@
           }
         }
       ],
+      [
       "expo-camera",
       {
           "cameraPermission": "Allow MAPTIVA to access the camera to scan workstation QR codes."
-        },
+        }
+    ],
       "expo-web-browser",
       "expo-font"
     ],
