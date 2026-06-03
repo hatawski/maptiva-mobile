@@ -12,7 +12,6 @@
       "supportsTablet": true
     },
     "android": {
-      "usesCleartextTraffic": true,
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -46,13 +45,21 @@
         }
       ],
       [
-      "expo-camera",
-      {
+        "expo-camera",
+        {
           "cameraPermission": "Allow MAPTIVA to access the camera to scan workstation QR codes."
         }
-    ],
+      ],
       "expo-web-browser",
-      "expo-font"
+      "expo-font",
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "usesCleartextTraffic": true
+          }
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
