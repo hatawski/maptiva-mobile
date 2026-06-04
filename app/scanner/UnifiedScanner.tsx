@@ -74,7 +74,8 @@ export default function UnifiedScanner() {
       const res = await fetch(`${API_BASE}/qr-login`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({
           token,
@@ -118,7 +119,8 @@ export default function UnifiedScanner() {
       const res = await fetch(`${API_BASE}/reserve`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({
           student_id: parsed.id, // Emits backend primary key constraint tracking

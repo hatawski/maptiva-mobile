@@ -36,7 +36,8 @@ export default function ReportPage() {
       const res = await fetch(`${API_BASE}/report`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          'ngrok-skip-browser-warning': 'true'
         },
         body: JSON.stringify({
           student_id: parsed.id,
