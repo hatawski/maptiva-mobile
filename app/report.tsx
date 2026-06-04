@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "reac
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
 export default function ReportPage() {
   const router = useRouter();
@@ -37,7 +37,7 @@ export default function ReportPage() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'ngrok-skip-browser-warning': 'true'
+          "ngrok-skip-browser-warning": "true" // ✅ Properly bypasses ngrok filter page
         },
         body: JSON.stringify({
           student_id: parsed.id,

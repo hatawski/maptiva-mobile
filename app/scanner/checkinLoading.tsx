@@ -8,7 +8,7 @@ export default function CheckInLoading() {
   const params = useLocalSearchParams();
   const { pc_name } = params; // Make sure your scanner passes pc_name here
 
-  const API_URL = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+  const API_URL = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
   useEffect(() => {
     const performCheckIn = async () => {
@@ -26,7 +26,10 @@ export default function CheckInLoading() {
         // 2. Send the reservation payload to your DietPi server
         const response = await fetch(`${API_URL}/reserve`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: { 
+            "Content-Type": "application/json",
+            "ngrok-skip-browser-warning": "true" // ✅ Bypasses the ngrok interstitial warning page
+          },
           body: JSON.stringify({
             student_id: parsedUser.id, // Sends database integer id
             pc_name: pc_name           // Sends scanned PC name (e.g., "PC01")

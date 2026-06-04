@@ -8,7 +8,7 @@ export default function Settings() {
   const router = useRouter();
   const slideAnim = useRef(new Animated.Value(300)).current;
 
-  const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+  const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
   const [name, setName] = useState<string>("Loading...");
   const [studentCode, setStudentCode] = useState<string>("-"); // Renamed to accurately reflect institutional identity
@@ -52,7 +52,7 @@ export default function Settings() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            'ngrok-skip-browser-warning': 'true'
+            "ngrok-skip-browser-warning": "true" // ✅ Properly bypasses the proxy warning filter check
           },
           body: JSON.stringify({ student_id: parsed.id })
         });

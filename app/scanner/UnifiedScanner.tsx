@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width } = Dimensions.get("window");
 const FRAME_SIZE = 250;
 
-const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
 export default function UnifiedScanner() {
   const router = useRouter();
@@ -75,7 +75,7 @@ export default function UnifiedScanner() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'ngrok-skip-browser-warning': 'true'
+          "ngrok-skip-browser-warning": "true"
         },
         body: JSON.stringify({
           token,
@@ -120,7 +120,7 @@ export default function UnifiedScanner() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'ngrok-skip-browser-warning': 'true'
+          "ngrok-skip-browser-warning": "true"
         },
         body: JSON.stringify({
           student_id: parsed.id, // Emits backend primary key constraint tracking

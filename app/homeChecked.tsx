@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
 export default function HomeChecked() {
   const router = useRouter();
@@ -54,7 +54,7 @@ export default function HomeChecked() {
                 method: "POST",
                 headers: { 
                   "Content-Type": "application/json",
-                  'ngrok-skip-browser-warning': 'true'
+                  "ngrok-skip-browser-warning": "true" // ✅ Bypasses the ngrok interstitial warning page safely
                 },
                 body: JSON.stringify({ student_id: identificationPayload }),
               });

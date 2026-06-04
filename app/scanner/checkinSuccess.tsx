@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
 export default function CheckInSuccess() {
   const router = useRouter();
@@ -25,17 +25,19 @@ export default function CheckInSuccess() {
       if (!parsed?.id) return;
 
       socket = io(API_BASE, {
-        transports: ["websocket"],
+        transports: ["websocket", "polling"], // ✅ Added fallback transport protocol
         autoConnect: true,
-        forceNew: true
+        forceNew: true,
+        extraHeaders: {
+          "ngrok-skip-browser-warning": "true" // ✅ Bypasses ngrok gateway block for sockets
+        }
       });
 
       socket.on("connect", () => {
         socket.emit("join_mobile", { student_id: parsed.id });
       });
 
-      // ✅ If PC gets freed (force checkout, logout, shutdown)
-      // go back to home
+      // ✅ If PC gets freed (force checkout, logout, shutdown) go back to home
       socket.on("pc_locked", () => {
         Alert.alert(
           "Session Ended",
@@ -58,7 +60,7 @@ export default function CheckInSuccess() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          'ngrok-skip-browser-warning': 'true'
+          "ngrok-skip-browser-warning": "true" // ✅ Kept clean to bypass proxy filter checks
         },
         body: JSON.stringify({ student_id: parsed.id }),
       });

@@ -5,21 +5,20 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+const API_BASE = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
 export default function HomeScreen() {
   const router = useRouter();
 
-
   useEffect(() => {
-  const checkTutorial = async () => {
-    const done = await AsyncStorage.getItem("tutorial_done");
-    if (!done) {
-      router.replace("/tutorial");
-    }
-  };
-  checkTutorial();
-}, []);
+    const checkTutorial = async () => {
+      const done = await AsyncStorage.getItem("tutorial_done");
+      if (!done) {
+        router.replace("/tutorial");
+      }
+    };
+    checkTutorial();
+  }, []);
 
   // ✅ Listen for admin approval via socket
   useEffect(() => {
@@ -30,16 +29,25 @@ export default function HomeScreen() {
       const parsed = JSON.parse(storedUser || "{}");
       if (!parsed?.id) return;
 
+      // Initialize Socket connection with fallback protocols and ngrok skip headers
       socket = io(API_BASE, {
-        transports: ["websocket"],
+        transports: ["websocket", "polling"],
         autoConnect: true,
-        forceNew: true
+        forceNew: true,
+        extraHeaders: {
+          "ngrok-skip-browser-warning": "true"
+        }
       });
 
       socket.on("connect", () => {
         // ✅ Join mobile room
         socket.emit("join_mobile", { student_id: parsed.id });
-        console.log("Mobile joined room:", parsed.id);
+        console.log("Mobile joined room successfully:", parsed.id);
+      });
+
+      // ✅ Log any connection bugs to the terminal debugger
+      socket.on("connect_error", (err: any) => {
+        console.log("Mobile Socket Connection Error:", err.message);
       });
 
       // ✅ When admin accepts permission request
@@ -55,7 +63,9 @@ export default function HomeScreen() {
     };
 
     setupSocket();
-    return () => { if (socket) socket.disconnect(); };
+    return () => { 
+      if (socket) socket.disconnect(); 
+    };
   }, []);
 
   return (

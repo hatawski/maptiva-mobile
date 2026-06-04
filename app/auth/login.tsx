@@ -8,41 +8,44 @@ export default function Login() {
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
 
-  const API_URL = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+  const API_URL = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
   const handleLogin = async () => {
-  if (!studentId || !password) {
-    Alert.alert("Error", "Please fill in all fields");
-    return;
-  }
-
-  try {
-    const response = await fetch(`${API_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ student_id: studentId, password }),
-    });
-
-    const data = await response.json();
-
-    if (response.ok) {
-      // Save correct info in AsyncStorage
-      await AsyncStorage.setItem("user", JSON.stringify({
-  name: data.name,
-  id: data.id,          // ← integer id for database relations
-  student_id: data.student_id,  // ← student number for display
-}));
-
-      Alert.alert("Success", "Login successful");
-      router.push("../home");
-    } else {
-      Alert.alert("Login Failed", data.message);
+    if (!studentId || !password) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
-  } catch (error) {
-    console.log("Login error:", error);
-    Alert.alert("Error", "Cannot connect to server");
-  }
-};
+
+    try {
+      const response = await fetch(`${API_URL}/login`, {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true" // ✅ Bypasses the ngrok interstitial warning page
+        },
+        body: JSON.stringify({ student_id: studentId, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Save correct info in AsyncStorage
+        await AsyncStorage.setItem("user", JSON.stringify({
+          name: data.name,
+          id: data.id,          // ← integer id for database relations
+          student_id: data.student_id,  // ← student number for display
+        }));
+
+        Alert.alert("Success", "Login successful");
+        router.push("../home");
+      } else {
+        Alert.alert("Login Failed", data.message || "Invalid credentials");
+      }
+    } catch (error) {
+      console.log("Login network request error:", error);
+      Alert.alert("Error", "Cannot connect to server");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -61,6 +64,7 @@ export default function Login() {
           placeholderTextColor="#9AA0A6"
           value={studentId}
           onChangeText={setStudentId}
+          autoCapitalize="none"
         />
 
         <TextInput

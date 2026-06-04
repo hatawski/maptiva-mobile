@@ -9,7 +9,7 @@ export default function SignupScreen() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const API_URL = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
+  const API_URL = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
 
   const handleSignup = async () => {
     // Validate
@@ -30,8 +30,10 @@ export default function SignupScreen() {
     try {
       const response = await fetch(`${API_URL}/signup`, {
         method: "POST",
-        headers: { "Content-Type": "application/json"
-         },
+        headers: { 
+          "Content-Type": "application/json",
+          "ngrok-skip-browser-warning": "true" // ✅ Bypasses the ngrok interstitial warning page
+        },
         body: JSON.stringify({
           name: fullname,
           student_id: studentId,
@@ -42,18 +44,18 @@ export default function SignupScreen() {
       const data = await response.json();
 
       if (response.ok) {
-  Alert.alert("Success", "Account created successfully!", [
-    {
-      text: "OK",
-      onPress: () => router.push("../auth/login") // ← go to login instead of home
-    }
-  ]);
-}
+        Alert.alert("Success", "Account created successfully!", [
+          {
+            text: "OK",
+            onPress: () => router.push("../auth/login") // ← go to login instead of home
+          }
+        ]);
+      }
       else {
         Alert.alert("Signup Failed", data.message || "Account creation failed");
       }
     } catch (error) {
-      console.log("Signup error:", error);
+      console.log("Signup network request error:", error);
       Alert.alert("Error", "Cannot connect to server");
     }
   };
@@ -84,6 +86,7 @@ export default function SignupScreen() {
           style={styles.input}
           value={studentId}
           onChangeText={setStudentId}
+          autoCapitalize="characters" // ✅ Helpful mobile addition: automatically forces uppercase typing for CA IDs
         />
         <TextInput
           placeholder="Password"
@@ -100,13 +103,14 @@ export default function SignupScreen() {
 
         <Text style={styles.signupText}> Have an account?{" "} 
           <Text style={styles.link} onPress={() => router.push("../auth/login")} > Login. 
-            </Text> </Text>
+          </Text> 
+        </Text>
       </View>
     </View>
   );
 }
 
-// === KEEP YOUR ORIGINAL DESIGN STYLES ===
+// === ALL YOUR ORIGINAL DESIGN STYLES PRESERVED ===
 const styles = StyleSheet.create({
   container: {
     flex: 1,
