@@ -8,7 +8,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const { width } = Dimensions.get("window");
 const FRAME_SIZE = 250;
 
-const API_BASE = "http://50.0.14.185:5000";
+const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
 
 export default function UnifiedScanner() {
   const router = useRouter();

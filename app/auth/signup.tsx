@@ -9,7 +9,7 @@ export default function SignupScreen() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const API_URL = "http://50.0.14.185:5000";
+  const API_URL = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
 
   const handleSignup = async () => {
     // Validate

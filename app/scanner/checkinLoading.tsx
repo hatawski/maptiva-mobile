@@ -8,7 +8,7 @@ export default function CheckInLoading() {
   const params = useLocalSearchParams();
   const { pc_name } = params; // Make sure your scanner passes pc_name here
 
-  const API_URL = "http://50.0.14.185:5000";
+  const API_URL = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
 
   useEffect(() => {
     const performCheckIn = async () => {

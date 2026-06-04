@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE = "http://50.0.14.185:5000";
+const API_BASE = " https://alejandra-uncognisable-undescriptively.ngrok-free.dev";
 
 export default function HomeChecked() {
   const router = useRouter();
