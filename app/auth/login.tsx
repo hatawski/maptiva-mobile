@@ -8,7 +8,7 @@ export default function Login() {
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
 
-  const API_URL = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
+  const API_URL = "https://survive-printers-maker-chelsea.trycloudflare.com";
 
   const handleLogin = async () => {
     if (!studentId || !password) {

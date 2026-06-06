@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE = "https://discusses-reality-accurate-usually.trycloudflare.com";
+const API_BASE = "https://survive-printers-maker-chelsea.trycloudflare.com";
 
 export default function HomeChecked() {
   const router = useRouter();

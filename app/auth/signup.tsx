@@ -9,7 +9,7 @@ export default function SignupScreen() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const API_URL = "https://alejandra-uncognisable-undescriptively.ngrok-free.dev".trim();
+  const API_URL = "https://survive-printers-maker-chelsea.trycloudflare.com";
 
   const handleSignup = async () => {
     // Validate
