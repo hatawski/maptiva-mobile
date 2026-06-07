@@ -1,7 +1,8 @@
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import NetInfo from "@react-native-community/netinfo"; // ✅ Added NetInfo import
 
 export default function Login() {
   const router = useRouter();
@@ -10,7 +11,31 @@ export default function Login() {
 
   const API_URL = "https://survive-printers-maker-chelsea.trycloudflare.com";
 
+  // ✅ Real-time internet connection listener
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener((state) => {
+      if (state.isConnected === false) {
+        Alert.alert(
+          "No Internet Connection",
+          "Maptiva requires an active internet or mobile data connection to log in. Please check your network settings.",
+          [{ text: "OK" }],
+          { cancelable: false } // Forces user interaction, cannot tap away to close
+        );
+      }
+    });
+
+    // Clean up subscription on unmount
+    return () => unsubscribe();
+  }, []);
+
   const handleLogin = async () => {
+    // Extra security check: stop execution early if offline when pressing the login button
+    const state = await NetInfo.fetch();
+    if (!state.isConnected) {
+      Alert.alert("Error", "No internet connection. Unable to send login request.");
+      return;
+    }
+
     if (!studentId || !password) {
       Alert.alert("Error", "Please fill in all fields");
       return;
@@ -21,7 +46,7 @@ export default function Login() {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true" // ✅ Bypasses the ngrok interstitial warning page
+          "ngrok-skip-browser-warning": "true" 
         },
         body: JSON.stringify({ student_id: studentId, password }),
       });
@@ -29,11 +54,10 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        // Save correct info in AsyncStorage
         await AsyncStorage.setItem("user", JSON.stringify({
           name: data.name,
-          id: data.id,          // ← integer id for database relations
-          student_id: data.student_id,  // ← student number for display
+          id: data.id,          
+          student_id: data.student_id,  
         }));
 
         Alert.alert("Success", "Login successful");
