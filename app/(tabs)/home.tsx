@@ -5,7 +5,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const API_BASE = "https://survive-printers-maker-chelsea.trycloudflare.com";
+const API_BASE = "https://membrane-mate-fourth-disks.trycloudflare.com";
 
 export default function HomeScreen() {
   const router = useRouter();

@@ -8,7 +8,7 @@ export default function CheckInLoading() {
   const params = useLocalSearchParams();
   const { pc_name } = params; // Make sure your scanner passes pc_name here
 
-  const API_URL = "https://survive-printers-maker-chelsea.trycloudflare.com";
+  const API_URL = "https://membrane-mate-fourth-disks.trycloudflare.com";
 
   useEffect(() => {
     const performCheckIn = async () => {
