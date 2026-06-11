@@ -25,11 +25,11 @@ export default function UnifiedScanner() {
         Animated.timing(scanAnim, { toValue: 0, duration: 2000, useNativeDriver: true }),
       ])
     ).start();
-  }, []);
+  }, [scanAnim]);
 
   useEffect(() => {
     if (!permission?.granted) requestPermission();
-  }, [permission]);
+  }, [permission, requestPermission]);
 
   if (!permission) return <Text style={styles.fallbackText}>Requesting camera permission...</Text>;
   
@@ -59,7 +59,7 @@ export default function UnifiedScanner() {
     }
   };
 
-  // ✅ Login QR — updates authorization logs via DietPi Flask Backend
+  // ✅ Login QR — updates authorization logs via Flask Backend
   const handleLoginQR = async (token: string) => {
     try {
       const storedUser = await AsyncStorage.getItem("user");
@@ -90,7 +90,8 @@ export default function UnifiedScanner() {
           { text: "OK", onPress: () => router.replace("/home") }
         ]);
       } else {
-        Alert.alert("Authentication Failed", data.message || "Invalid or expired token.");
+        // ✅ SECURE UPDATE: Catch and display the backend cross-account rejection message
+        Alert.alert("Authentication Denied", data.message || "Invalid or expired session token.");
         resetScanner();
       }
     } catch (err) {
