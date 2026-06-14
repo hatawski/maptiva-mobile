@@ -2,7 +2,7 @@ import { useRouter } from "expo-router";
 import React, { useState, useEffect } from "react";
 import { Alert, Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import NetInfo from "@react-native-community/netinfo"; // ✅ Added NetInfo import
+import NetInfo from "@react-native-community/netinfo"; // ✅ Real-time internet connection listener
 
 export default function Login() {
   const router = useRouter();
@@ -82,13 +82,15 @@ export default function Login() {
       <View style={styles.box}>
         <Text style={styles.title}>Log In</Text>
 
+        {/* ✅ Updated: Changed placeholder to LRN, enabled number-pad, and limited input length */}
         <TextInput
           style={styles.input}
-          placeholder="Student ID"
+          placeholder="Enter 12-Digit LRN"
           placeholderTextColor="#9AA0A6"
           value={studentId}
           onChangeText={setStudentId}
-          autoCapitalize="none"
+          keyboardType="number-pad"
+          maxLength={12}
         />
 
         <TextInput
@@ -99,6 +101,14 @@ export default function Login() {
           value={password}
           onChangeText={setPassword}
         />
+
+        {/* ✅ Added Forgot Password Anchor Link Trigger Element */}
+        <TouchableOpacity 
+          style={styles.forgotPasswordContainer} 
+          onPress={() => router.push("../auth/forgot-password")}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
+        </TouchableOpacity>
 
         <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
           <Text style={styles.loginText}>Log In</Text>
@@ -160,6 +170,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     marginBottom: 10,
     textAlign: "center",
+  },
+  forgotPasswordContainer: {
+    alignSelf: "flex-end",
+    marginRight: "12%",
+    marginBottom: 10,
+    marginTop: 2,
+  },
+  forgotPasswordText: {
+    color: "#00E0B0",
+    fontSize: 13,
+    fontWeight: "600",
+    textDecorationLine: "underline",
   },
   loginButton: {
     backgroundColor: "#00E0B0",

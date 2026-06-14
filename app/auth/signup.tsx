@@ -1,25 +1,32 @@
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SignupScreen() {
   const [fullname, setFullname] = useState("");
-  const [studentId, setStudentId] = useState("");
+  const [studentId, setStudentId] = useState(""); // Holds the 12-digit LRN
+  const [email, setEmail] = useState(""); 
   const [password, setPassword] = useState("");
   const router = useRouter();
 
   const API_URL = "https://membrane-mate-fourth-disks.trycloudflare.com";
 
   const handleSignup = async () => {
-    // Validate
-    const studentIdPattern = /^CA\d+$/;
-    if (!fullname || !studentId || !password) {
+    // ✅ Updated Pattern: Validates exactly 12 numeric digits for standard LRN
+    const lrnPattern = /^\d{12}$/;
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
+
+    if (!fullname || !studentId || !email || !password) {
       Alert.alert("Error", "Please fill all fields");
       return;
     }
-    if (!studentIdPattern.test(studentId)) {
-      Alert.alert("Error", "Student ID must start with CA followed by numbers (e.g., CA202208460)");
+    // ✅ Updated validation logic to enforce the 12-digit LRN
+    if (!lrnPattern.test(studentId)) {
+      Alert.alert("Error", "LRN must be exactly 12 digits (e.g., 102345678901)");
+      return;
+    }
+    if (!emailPattern.test(email)) {
+      Alert.alert("Error", "Please enter a valid email address");
       return;
     }
     if (password.length < 6) {
@@ -32,11 +39,12 @@ export default function SignupScreen() {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          "ngrok-skip-browser-warning": "true" // ✅ Bypasses the ngrok interstitial warning page
+          "ngrok-skip-browser-warning": "true" 
         },
         body: JSON.stringify({
           name: fullname,
-          student_id: studentId,
+          student_id: studentId, // Payload key remains 'student_id' for backend safety
+          email, 
           password,
         }),
       });
@@ -47,11 +55,10 @@ export default function SignupScreen() {
         Alert.alert("Success", "Account created successfully!", [
           {
             text: "OK",
-            onPress: () => router.push("../auth/login") // ← go to login instead of home
+            onPress: () => router.push("../auth/login") 
           }
         ]);
-      }
-      else {
+      } else {
         Alert.alert("Signup Failed", data.message || "Account creation failed");
       }
     } catch (error) {
@@ -80,13 +87,26 @@ export default function SignupScreen() {
           value={fullname}
           onChangeText={setFullname}
         />
+        
+        {/* ✅ Updated: Uses LRN placeholder, restricts typing to 12 digits, and triggers phone number pad */}
         <TextInput
-          placeholder="Student ID"
+          placeholder="12-Digit LRN"
           placeholderTextColor="#b0b0b0"
           style={styles.input}
           value={studentId}
           onChangeText={setStudentId}
-          autoCapitalize="characters" // ✅ Helpful mobile addition: automatically forces uppercase typing for CA IDs
+          keyboardType="number-pad"
+          maxLength={12}
+        />
+
+        <TextInput
+          placeholder="School Email Address"
+          placeholderTextColor="#b0b0b0"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.input}
+          value={email}
+          onChangeText={setEmail}
         />
         <TextInput
           placeholder="Password"
@@ -110,73 +130,16 @@ export default function SignupScreen() {
   );
 }
 
-// === ALL YOUR ORIGINAL DESIGN STYLES PRESERVED ===
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#06182d",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    marginBottom: 20,
-  },
-  headerBox: {
-    backgroundColor: "#135c5a",
-    paddingVertical: 8,
-    paddingHorizontal: 40,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  headerText: {
-    color: "#fff",
-    fontSize: 18,
-    fontWeight: "bold",
-  },
-  formBox: {
-    backgroundColor: "#0b2a4a",
-    padding: 20,
-    borderRadius: 10,
-    width: "80%",
-    shadowColor: "#000",
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 10,
-  },
-  title: {
-    color: "#fff",
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  input: {
-    backgroundColor: "#1c3b5c",
-    color: "#fff",
-    padding: 10,
-    borderRadius: 20,
-    marginBottom: 15,
-    textAlign: "center",
-  },
-  button: {
-    backgroundColor: "#18d6b3",
-    padding: 10,
-    borderRadius: 20,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "#000",
-    fontWeight: "bold",
-  },
-  signupText: {
-    color: "#fff",
-    textAlign: "center",
-    marginTop: 10,
-  },
-  link: {
-    color: "#18d6b3",
-    fontWeight: "bold",
-  },
+  container: { flex: 1, backgroundColor: "#06182d", alignItems: "center", justifyContent: "center" },
+  logo: { width: 100, height: 100, marginBottom: 20 },
+  headerBox: { backgroundColor: "#135c5a", paddingVertical: 8, paddingHorizontal: 40, borderRadius: 5, marginBottom: 10 },
+  headerText: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  formBox: { backgroundColor: "#0b2a4a", padding: 20, borderRadius: 10, width: "80%", shadowColor: "#000", shadowOpacity: 0.3, shadowRadius: 10, elevation: 10 },
+  title: { color: "#fff", fontSize: 20, fontWeight: "bold", marginBottom: 20, textAlign: "center" },
+  input: { backgroundColor: "#1c3b5c", color: "#fff", padding: 10, borderRadius: 20, marginBottom: 15, textAlign: "center" },
+  button: { backgroundColor: "#18d6b3", padding: 10, borderRadius: 20, alignItems: "center" },
+  buttonText: { color: "#000", fontWeight: "bold" },
+  signupText: { color: "#fff", textAlign: "center", marginTop: 10 },
+  link: { color: "#18d6b3", fontWeight: "bold" },
 });
