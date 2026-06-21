@@ -25,20 +25,10 @@ export default function CheckInScanner() {
     lockRef.current = true;
     setScanned(true);
 
+    // Expected format from scanned sticker/screen: e.g., "PC01" or "PC15"
     const scannedValue = data.trim();
-    let pc_name = "";
 
-    // ✅ Fix: Check if it's our new secure hyphenated format "checkin-[token]-[PC_NAME]"
-    if (scannedValue.startsWith("checkin-")) {
-      const parts = scannedValue.split("-");
-      pc_name = parts[parts.length - 1]; // Grabs the last piece (e.g., "PC01")
-    } else if (scannedValue.startsWith("PC")) {
-      // Direct legacy sticker fallback (e.g., "PC01")
-      pc_name = scannedValue;
-    }
-
-    // Double check that we actually isolated a valid PC workstation string
-    if (!pc_name.startsWith("PC")) {
+    if (!scannedValue.startsWith("PC")) {
       Alert.alert("Invalid QR", "This QR code is not a valid MAPTIVA Workstation identifier.", [
         {
           text: "Try Again",
@@ -51,10 +41,10 @@ export default function CheckInScanner() {
       return;
     }
 
-    // ✅ Hand over the parsed PC name to your transactional loading gateway
+    // ✅ Hand over the scanned PC name to the transactional loading gateway
     router.replace({
       pathname: "/scanner/checkinLoading",
-      params: { pc_name: pc_name },
+      params: { pc_name: scannedValue },
     });
   };
 
