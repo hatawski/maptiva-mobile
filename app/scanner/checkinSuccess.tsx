@@ -25,7 +25,7 @@ export default function CheckInSuccess() {
       if (!parsed?.id) return;
 
       socket = io(API_BASE, {
-        transports: ["websocket", "polling"], // ✅ Added fallback transport protocol
+        transports: ["polling","websocket", ], // ✅ Added fallback transport protocol
         autoConnect: true,
         forceNew: true,
         extraHeaders: {

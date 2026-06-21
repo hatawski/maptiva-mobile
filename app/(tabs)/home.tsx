@@ -31,7 +31,7 @@ export default function HomeScreen() {
 
       // Initialize Socket connection with fallback protocols and ngrok skip headers
       socket = io(API_BASE, {
-        transports: ["websocket", "polling"],
+        transports: ["polling", "websocket" ],
         autoConnect: true,
         forceNew: true,
         extraHeaders: {
