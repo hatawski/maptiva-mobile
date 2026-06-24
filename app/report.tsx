@@ -4,7 +4,7 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from "reac
 import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const API_BASE = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+const API_BASE = "https://nav-reflected-pic-blank.trycloudflare.com";
 
 export default function ReportPage() {
   const router = useRouter();

@@ -7,7 +7,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { io } from "socket.io-client";
 
-const API_BASE = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+const API_BASE = "https://nav-reflected-pic-blank.trycloudflare.com";
 
 export default function CheckInSuccess() {
   const router = useRouter();

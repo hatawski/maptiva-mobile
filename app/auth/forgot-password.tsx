@@ -11,7 +11,7 @@ export default function ForgotPasswordScreen() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const API_URL = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+  const API_URL = "https://nav-reflected-pic-blank.trycloudflare.com";
 
   // Step 1: Tell Flask to email an OTP pin code
   const handleRequestOtp = async () => {

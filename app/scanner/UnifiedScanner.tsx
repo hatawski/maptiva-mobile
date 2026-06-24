@@ -18,7 +18,7 @@ const FRAME_SIZE = 250;
 
 
 
-const API_BASE = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+const API_BASE = "https://nav-reflected-pic-blank.trycloudflare.com";
 
 
 

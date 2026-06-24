@@ -9,7 +9,7 @@ export default function Login() {
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState("");
 
-  const API_URL = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+  const API_URL = "https://nav-reflected-pic-blank.trycloudflare.com";
 
   // ✅ Real-time internet connection listener
   useEffect(() => {

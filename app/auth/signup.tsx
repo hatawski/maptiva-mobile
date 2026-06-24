@@ -9,7 +9,7 @@ export default function SignupScreen() {
   const [password, setPassword] = useState("");
   const router = useRouter();
 
-  const API_URL = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+  const API_URL = "https://nav-reflected-pic-blank.trycloudflare.com";
 
   const handleSignup = async () => {
     // ✅ Updated Pattern: Validates exactly 12 numeric digits for standard LRN

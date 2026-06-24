@@ -8,7 +8,7 @@ export default function Settings() {
   const router = useRouter();
   const slideAnim = useRef(new Animated.Value(300)).current;
 
-  const API_BASE = "https://somehow-fighter-transportation-tomorrow.trycloudflare.com";
+  const API_BASE = "https://nav-reflected-pic-blank.trycloudflare.com";
 
   const [name, setName] = useState<string>("Loading...");
   const [studentCode, setStudentCode] = useState<string>("-"); // Renamed to accurately reflect institutional identity
